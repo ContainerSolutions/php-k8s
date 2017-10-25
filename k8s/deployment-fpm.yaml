@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fpm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fpm
+  template:
+    metadata:
+      name: fpm
+      labels:
+        app: fpm
+    spec:
+      containers:
+      - name: fpm
+        image: eu.gcr.io/container-solutions/thijs-fpm:0.1
+        ports:
+        - name: fpm
+          containerPort: 9000
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 300m
+            memory: 200Mi
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+        readinessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+

@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: eu.gcr.io/container-solutions/thijs-nginx:0.1
+        ports:
+        - name: nginx
+          containerPort: 80
+        imagePullPolicy: Always      
+        resources:
+          requests:
+            cpu: 100m
+            memory: 10Mi
+          limits:
+            cpu: 200m
+            memory: 20Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
